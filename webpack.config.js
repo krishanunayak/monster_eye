@@ -8,4 +8,12 @@ module.exports = {
         path: path.resolve(__dirname, "public"),
     },
     devtool: "inline-source-map",
+    module: {
+        rules: [
+            {
+                test: /\.js?$/,
+                exclude: [/node_modules/],
+            },
+        ],
+    },
 };
