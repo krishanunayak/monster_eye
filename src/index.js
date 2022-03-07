@@ -1,6 +1,4 @@
-import { select, selectAll } from "d3-selection";
-import { scaleLinear, scaleRadial } from "d3-scale";
-import { transition, duration, transform } from "d3-transition";
+import * as d3 from "d3";
 
 const [width, height] = [innerWidth, innerHeight];
 const [eyeCenterX, eyeCenterY, eyeRadius] = [0, 0, 100];
@@ -13,12 +11,12 @@ let [irisMinRadiusX, irisMinRadiusY] = [38, 45];
 let [pupilCenterX, pupilCenterY] = [0, 0];
 let [pupilRadiusX, pupilRadiusY] = [20, 20];
 let [pupilMinRadiusX, pupilMinRadiusY] = [13, 17];
-let [pupilMaxRadiusX, pupilMaxRadiusY] = [15, 15];
 
 const minDist = Math.min(width, height);
 const maxDist = Math.max(width, height);
 
-const irisCenterScale = scaleLinear()
+const irisCenterScale = d3
+    .scaleLinear()
     .domain([
         0,
         (minDist * minDist) / 4,
@@ -29,14 +27,17 @@ const irisCenterScale = scaleLinear()
         eyeInnerRadius * eyeInnerRadius,
         eyeInnerRadius * eyeInnerRadius,
     ]);
-const irisRadiusScaleX = scaleLinear()
+const irisRadiusScaleX = d3
+    .scaleLinear()
     .domain([0, eyeInnerRadius])
     .range([irisRadiusX, irisMinRadiusX]);
-const irisRadiusScaleY = scaleLinear()
+const irisRadiusScaleY = d3
+    .scaleLinear()
     .domain([0, eyeInnerRadius])
     .range([irisRadiusY, irisMinRadiusY]);
 
-const pupilCeterScale = scaleLinear()
+const pupilCeterScale = d3
+    .scaleLinear()
     .domain([
         0,
         (minDist * minDist) / 4,
@@ -47,10 +48,12 @@ const pupilCeterScale = scaleLinear()
         eyeInnerRadius * eyeInnerRadius + 2000,
         eyeInnerRadius * eyeInnerRadius + 2000,
     ]);
-const pupilRadiusScaleX = scaleLinear()
+const pupilRadiusScaleX = d3
+    .scaleLinear()
     .domain([0, eyeInnerRadius])
     .range([pupilRadiusX, pupilMinRadiusX]);
-const pupilRadiusScaleY = scaleLinear()
+const pupilRadiusScaleY = d3
+    .scaleLinear()
     .domain([0, eyeInnerRadius])
     .range([pupilRadiusY, pupilMinRadiusY]);
 
@@ -101,7 +104,8 @@ function mouseMove(mouseEvent) {
         );
 }
 
-const svg = select("body")
+const svg = d3
+    .select("body")
     .append("svg")
     .attr("width", width)
     .attr("height", height)
