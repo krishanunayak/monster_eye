@@ -4,15 +4,20 @@ import { transition, duration, transform } from "d3-transition";
 
 const [width, height] = [innerWidth, innerHeight];
 const [eyeCenterX, eyeCenterY, eyeRadius] = [0, 0, 100];
-const eyeInnerRadius = 65;
+const eyeInnerRadius = 62;
 const eyeStrokeWidth = 5;
 let [mousePosX, mousePosY] = [0, 0];
 let [irisCenterX, irisCenterY] = [0, 0];
 let [irisRadiusX, irisRadiusY] = [40, 40];
 let [irisMinRadiusX, irisMinRadiusY] = [30, 35];
+let [pupilCenterX, pupilCenterY] = [0, 0];
+let [pupilRadiusX, pupilRadiusY] = [20, 20];
+let [pupilMinRadiusX, pupilMinRadiusY] = [15, 17];
+let [pupilMaxRadiusX, pupilMaxRadiusY] = [15, 15];
 
 const minDist = Math.min(width, height);
 const maxDist = Math.max(width, height);
+
 const irisCenterScale = scaleLinear()
     .domain([
         0,
@@ -30,9 +35,29 @@ const irisRadiusScaleX = scaleLinear()
 const irisRadiusScaleY = scaleLinear()
     .domain([0, eyeInnerRadius])
     .range([irisRadiusY, irisMinRadiusY]);
+
+const pupilCeterScale = scaleLinear()
+    .domain([
+        0,
+        (minDist * minDist) / 4,
+        (minDist * minDist) / 4 + (maxDist * maxDist) / 4,
+    ])
+    .range([
+        0,
+        eyeInnerRadius * eyeInnerRadius + 2000,
+        eyeInnerRadius * eyeInnerRadius + 2000,
+    ]);
+const pupilRadiusScaleX = scaleLinear()
+    .domain([0, eyeInnerRadius])
+    .range([pupilRadiusX, pupilMinRadiusX]);
+const pupilRadiusScaleY = scaleLinear()
+    .domain([0, eyeInnerRadius])
+    .range([pupilRadiusY, pupilMinRadiusY]);
+
 function mapMousePos(x, y) {
     return [x - width / 2, y - height / 2];
 }
+
 function mouseMove(mouseEvent) {
     [mousePosX, mousePosY] = mapMousePos(
         mouseEvent.clientX,
@@ -55,6 +80,24 @@ function mouseMove(mouseEvent) {
         .attr(
             "transform",
             `rotate(${(theta * 180) / Math.PI} ${irisCenterX} ${irisCenterY})`
+        );
+    const r = Math.sqrt(
+        pupilCeterScale(mousePosX * mousePosX + mousePosY * mousePosY)
+    );
+    pupilCenterX = r * Math.cos(theta);
+    pupilCenterY = r * Math.sin(theta);
+    pupilRadiusX = pupilRadiusScaleX(r);
+    pupilRadiusY = pupilRadiusScaleY(r);
+    pupil
+        .transition()
+        .duration(10)
+        .attr("cx", pupilCenterX)
+        .attr("cy", pupilCenterY)
+        .attr("rx", pupilRadiusX)
+        .attr("ry", pupilRadiusY)
+        .attr(
+            "transform",
+            `rotate(${(theta * 180) / Math.PI} ${pupilCenterX} ${pupilCenterY})`
         );
 }
 
@@ -83,4 +126,13 @@ const iris = group
     .attr("cy", irisCenterY)
     .attr("rx", irisRadiusX)
     .attr("ry", irisRadiusY)
+    .style("fill", "gray");
+
+const pupil = group
+    .append("ellipse")
+    .attr("id", "pupil")
+    .attr("cx", pupilCenterX)
+    .attr("cy", pupilCenterY)
+    .attr("rx", pupilRadiusX)
+    .attr("ry", pupilRadiusY)
     .style("fill", "black");
