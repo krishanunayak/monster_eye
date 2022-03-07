@@ -1,15 +1,30 @@
 import { select, selectAll } from "d3-selection";
+import { scaleLinear, scaleRadial } from "d3-scale";
+import { transition, duration } from "d3-transition";
 
-const [width, height] = [innerWidth, innerHeight];
+const [width, height] = [innerWidth, "auto"];
 const [eyeCenterX, eyeCenterY, eyeRadius] = [0, 0, 100];
 const eyeStrokeWidth = 5;
 let [mousePosX, mousePosY] = [0, 0];
 let [irisCenterX, irisCenterY] = [0, 0];
-let [irisRadX, irisRadY] = [40, 40];
+let [irisRadiusX, irisRadiusY] = [40, 40];
+
+const irisCenterXScale = scaleLinear()
+    .domain([0, width / 2, width])
+    .range([-eyeRadius, 0, eyeRadius]);
+const irisCenterYScale = scaleLinear()
+    .domain([0, height / 2, height])
+    .range([-eyeRadius, 0, eyeRadius]);
 
 function mouseMove(mouseEvent) {
     mousePosX = mouseEvent.clientX;
     mousePosY = mouseEvent.clientY;
+
+    select("#iris")
+        .transition()
+        .duration(10)
+        .attr("cx", irisCenterXScale(mousePosX))
+        .attr("cy", irisCenterYScale(mousePosY));
 }
 
 const svg = select("body")
@@ -19,7 +34,10 @@ const svg = select("body")
     .attr("viewBox", `${-width / 2} ${-height / 2} ${width} ${height}`)
     .on("mousemove", mouseMove);
 
-svg.append("circle")
+const group = svg.append("g");
+
+const eye = group
+    .append("circle")
     .attr("cx", eyeCenterX)
     .attr("cy", eyeCenterY)
     .attr("r", eyeRadius - eyeStrokeWidth)
@@ -27,9 +45,11 @@ svg.append("circle")
     .style("stroke", "black")
     .style("stroke-width", eyeStrokeWidth);
 
-svg.append("ellipse")
+const iris = group
+    .append("ellipse")
+    .attr("id", "iris")
     .attr("cx", irisCenterX)
     .attr("cy", irisCenterY)
-    .attr("rx", irisRadX)
-    .attr("ry", irisRadY)
+    .attr("rx", irisRadiusX)
+    .attr("ry", irisRadiusY)
     .style("fill", "black");
