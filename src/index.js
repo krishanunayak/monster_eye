@@ -2,7 +2,7 @@ import { select, selectAll } from "d3-selection";
 import { scaleLinear, scaleRadial } from "d3-scale";
 import { transition, duration } from "d3-transition";
 
-const [width, height] = [innerWidth, "auto"];
+const [width, height] = [innerWidth, innerHeight];
 const [eyeCenterX, eyeCenterY, eyeRadius] = [0, 0, 100];
 const eyeStrokeWidth = 5;
 let [mousePosX, mousePosY] = [0, 0];
