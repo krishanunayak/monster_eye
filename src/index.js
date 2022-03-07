@@ -4,7 +4,7 @@ import { transition, duration, transform } from "d3-transition";
 
 const [width, height] = [innerWidth, innerHeight];
 const [eyeCenterX, eyeCenterY, eyeRadius] = [0, 0, 100];
-const eyeInnerRadius = 60;
+const eyeInnerRadius = 65;
 const eyeStrokeWidth = 5;
 let [mousePosX, mousePosY] = [0, 0];
 let [irisCenterX, irisCenterY] = [0, 0];
@@ -14,7 +14,11 @@ let [irisMinRadiusX, irisMinRadiusY] = [30, 35];
 const minDist = Math.min(width, height);
 const maxDist = Math.max(width, height);
 const irisCenterScale = scaleLinear()
-    .domain([0, minDist * minDist, minDist * minDist + maxDist * maxDist])
+    .domain([
+        0,
+        (minDist * minDist) / 4,
+        (minDist * minDist) / 4 + (maxDist * maxDist) / 4,
+    ])
     .range([
         0,
         eyeInnerRadius * eyeInnerRadius,
