@@ -4,15 +4,15 @@ import { transition, duration, transform } from "d3-transition";
 
 const [width, height] = [innerWidth, innerHeight];
 const [eyeCenterX, eyeCenterY, eyeRadius] = [0, 0, 100];
-const eyeInnerRadius = 62;
+const eyeInnerRadius = 52;
 const eyeStrokeWidth = 5;
 let [mousePosX, mousePosY] = [0, 0];
 let [irisCenterX, irisCenterY] = [0, 0];
-let [irisRadiusX, irisRadiusY] = [40, 40];
-let [irisMinRadiusX, irisMinRadiusY] = [30, 35];
+let [irisRadiusX, irisRadiusY] = [50, 50];
+let [irisMinRadiusX, irisMinRadiusY] = [38, 45];
 let [pupilCenterX, pupilCenterY] = [0, 0];
 let [pupilRadiusX, pupilRadiusY] = [20, 20];
-let [pupilMinRadiusX, pupilMinRadiusY] = [15, 17];
+let [pupilMinRadiusX, pupilMinRadiusY] = [13, 17];
 let [pupilMaxRadiusX, pupilMaxRadiusY] = [15, 15];
 
 const minDist = Math.min(width, height);
